@@ -17,12 +17,17 @@ fs.readFile('./home.html', (err, data) => {
     //     res.send(data, {text:name});
     //     // res.send('Hello '+name+' !')
     // })
+    app.get('/name/:name', function (req, res) {
+        var name = req.params.name
+        res.setHeader('Content-Type', 'text/html')
+        res.render('home', { text: name }, function (err, html) {
+        })
+        // res.send('<h1>Hello '+name+' !</h1>')
+    })
 });
-app.get('/name/:name', function (req, res) {
-    var name = req.params.name
-    res.setHeader('Content-Type', 'text/html')
-    res.send('<h1>Hello '+name+' !</h1>')
-})
+
+// app.render('home.html')
+
 app.get('/name/', function (req, res) {
     var name = req.params.name
     res.setHeader('Content-Type', 'text/html')
