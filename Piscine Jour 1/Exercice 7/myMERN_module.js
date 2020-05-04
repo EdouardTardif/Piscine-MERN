@@ -7,33 +7,33 @@ class myMERN_module {
         // })
         // console.log('Create '+name+': OK')
         this.fs.writeFile(name, 'oui', (err) => {
-            if (err) throw ('Create '+name+': KO');
-            console.log('Create '+name+': OK');
+            if (err) return ('Create '+name+': KO');
+            return('Create '+name+': OK');
         });
     }
 
 
-    static read(name){
+    static async read(name){
         this.fs = require('fs')
         this.fs.readFile(name,'utf8', (err, data) => {
-            if (err) throw ('Read '+name+': KO');
-            console.log(data);
+            if (err) return ('Read '+name+': KO');
+            return(data);
         });
     }
 
     static update(name,content){
         this.fs = require('fs')
         this.fs.writeFile(name, content, (err) => {
-            if (err) throw ('Update '+name+': KO');
-            console.log('Update '+name+': OK');
+            if (err) return ('Update '+name+': KO');
+            return('Update '+name+': OK');
         });
     }
 
     static delete(name){
         this.fs = require('fs')
         this.fs.unlink(name, (err) => {
-            if (err) throw ('delete '+name+': KO');
-            console.log('Delete '+name+': OK');
+            if (err) return ('delete '+name+': KO');
+            return ('Delete '+name+': OK');
         });
     }
 }

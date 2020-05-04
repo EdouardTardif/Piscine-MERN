@@ -9,9 +9,12 @@ var myMERN_module = require('./myMERN_module.js')
 
 
 
-app.get('/files/:name', function (req, res) {
+app.get('/files/:name',async function (req, res) {
     var name = req.params.name
-    myMERN_module.read(name);
+    let text = await myMERN_module.read(name)
+    console.log('2er '+text);
+
+    // res.send(text);
 })
 app.post('/files/:name', function (req, res) {
     var name = req.params.name
