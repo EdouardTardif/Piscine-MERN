@@ -9,25 +9,27 @@ var myMERN_module = require('./myMERN_module.js')
 
 
 
-app.get('/files/:name',async function (req, res) {
+app.get('/files/:name', async function (req, res) {
     var name = req.params.name
     let text = await myMERN_module.read(name)
-    console.log('2er '+text);
-
-    // res.send(text);
+    res.send(text)
 })
 app.post('/files/:name', function (req, res) {
     var name = req.params.name
-    myMERN_module.create(name);
+    let text = await myMERN_module.create(name);
+    res.send(text)
+
 })
 app.put('/files/:name/:content', function (req, res) {
     var name = req.params.name
     var content = req.params.content
-    myMERN_module.update(name,content);
+    let text = await myMERN_module.update(name,content);
+    res.send(text)
 })
 app.delete('/files/:name', function (req, res) {
     var name = req.params.name
-    myMERN_module.delete(name);
+    let text = await myMERN_module.delete(name);
+    res.send(text)
 })
 
 

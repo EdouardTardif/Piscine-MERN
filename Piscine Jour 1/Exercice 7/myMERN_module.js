@@ -1,39 +1,43 @@
 class myMERN_module {
 
-    static create(name){
-        this.fs = require('fs')
-        // this.fs.writeFile(name,'test',function(err){
-        //     console.log('Create '+name+': KO')
-        // })
-        // console.log('Create '+name+': OK')
-        this.fs.writeFile(name, 'oui', (err) => {
-            if (err) return ('Create '+name+': KO');
-            return('Create '+name+': OK');
+    static async create(name){
+        let fs = require('fs')
+        return new Promise(function(resolve,reject){
+            fs.writeFile(name, 'oui', (err) => {
+                if (err) resolve('Create '+name+': KO');
+                resolve('Create '+name+': OK');
+            });
         });
     }
 
 
     static async read(name){
-        this.fs = require('fs')
-        this.fs.readFile(name,'utf8', (err, data) => {
-            if (err) return ('Read '+name+': KO');
-            return(data);
+        let fs = require('fs')
+        return new Promise(function(resolve,reject){
+            fs.readFile(name,'utf8', (err, data) => {
+                if (err) resolve('Read '+name+': KO');
+                resolve(data);
+            });
         });
     }
 
-    static update(name,content){
-        this.fs = require('fs')
-        this.fs.writeFile(name, content, (err) => {
-            if (err) return ('Update '+name+': KO');
-            return('Update '+name+': OK');
+    static async update(name,content){
+        let fs = require('fs')
+        return new Promise(function(resolve,reject){
+            fs.writeFile(name, content, (err) => {
+                if (err) resolve('Update '+name+': KO');
+                resolve('Update '+name+': OK');
+            });
         });
     }
 
-    static delete(name){
-        this.fs = require('fs')
-        this.fs.unlink(name, (err) => {
-            if (err) return ('delete '+name+': KO');
-            return ('Delete '+name+': OK');
+    static async delete(name){
+        let fs = require('fs')
+        return new Promise(function(resolve,reject){
+            fs.unlink(name, (err) => {
+                if (err) resolve('delete '+name+': KO');
+                resolve('Delete '+name+': OK');
+            });
         });
     }
 }
