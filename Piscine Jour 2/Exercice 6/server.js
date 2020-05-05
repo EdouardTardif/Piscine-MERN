@@ -4,7 +4,7 @@ let app = express();
 const fs = require('fs');
 let bodyParser = require('body-parser');
 
-const uri = "mongodb://localhost:27017/mern-piscine";
+const uri = "mongodb://localhost:27017/mern-pool";
 async function main(){
     const client = new MongoClient(uri,{useUnifiedTopology: true});
     // await client.connect();
@@ -29,37 +29,20 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 
 app.set('view engine','ejs')
 
-app.get('/', function (req, res) {
-    res.render('index')
-})
+app.get('/', function (req, ress) {
 
-app.post('/inscription', async function (req, res) {
-
-    let firstname = req.body.firstname;
-    let lastname = req.body.lastname;
-    let email = req.body.email;
-    let phone = req.body.phone;
-    let validated = 'in progress';
-    let admin = false;
-    // console.log({firstname: firstname,lastname:lastname,email:email,phone:phone,validated:validated,admin:admin });
     MongoClient.connect(uri,{useUnifiedTopology: true}, async function(err, db) {
-        if (err) throw err;
         var dbo = db.db("mern-pool");
-        var inscription = {firstname: firstname,lastname:lastname,email:email,phone:phone,validated:validated,admin:admin };
-        let message = new Promise(function(resolve,reject){
-            dbo.collection("students").insertOne(inscription, function(err, res) {
-                let message = '';
-                if (err) resolve('Failed to save the collection.');
-                console.log("1 document inserted");
-                resolve('Collection saved.');
-                
-                db.close();
-            });
+        dbo.collection("students").find({validated:'in progress'}).sort({lastname: 1}).toArray(function(err, res) {
+            let error = null;
+            if (err) error = ('Failed to show the collection.');
+            db.close();
+            console.log(res[0].firstname);
+            ress.render('inscription',{users: res,error:error});
         });
-        let test = await message;
-        res.render('inscription',{message: test});
     });
 })
+
 
 
 app.listen(4242,function(){

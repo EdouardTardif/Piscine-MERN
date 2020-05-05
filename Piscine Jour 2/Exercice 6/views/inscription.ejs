@@ -6,7 +6,15 @@
     <title>Document</title>
 </head>
 <body>
+    <% if (error) { %>
+        <h2><%= error %></h2>
+    <% } %>
+    <ul>
+        <% for (user in users ){%>
+            <li><p><%= users[user].lastname %></p><p><%= users[user].firstname %></p><p><%= users[user].phone %></p><p><%= users[user].email %></p><p><%= users[user].validated %></p></li>
+        <% }; %>
+    </ul>
 
-    <h2><%= message %></h2>
+
 </body>
 </html>

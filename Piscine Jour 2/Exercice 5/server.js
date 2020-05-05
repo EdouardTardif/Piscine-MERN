@@ -39,7 +39,7 @@ app.post('/inscription', async function (req, res) {
     let lastname = req.body.lastname;
     let email = req.body.email;
     let phone = req.body.phone;
-    let validated = 'in progress';
+    let validated = 'validated';
     let admin = false;
     // console.log({firstname: firstname,lastname:lastname,email:email,phone:phone,validated:validated,admin:admin });
     MongoClient.connect(uri,{useUnifiedTopology: true}, async function(err, db) {
