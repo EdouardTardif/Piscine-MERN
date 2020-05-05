@@ -7,6 +7,6 @@ var fs = require('fs')
 
 var myMERN_module = require('./myMERN_module.js')
 
-myMERN_module.read('test');
+myMERN_module.delete('test');
 
 app.listen(4242)

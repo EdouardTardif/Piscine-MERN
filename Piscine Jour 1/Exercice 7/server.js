@@ -14,19 +14,19 @@ app.get('/files/:name', async function (req, res) {
     let text = await myMERN_module.read(name)
     res.send(text)
 })
-app.post('/files/:name', function (req, res) {
+app.post('/files/:name', async function (req, res) {
     var name = req.params.name
     let text = await myMERN_module.create(name);
     res.send(text)
 
 })
-app.put('/files/:name/:content', function (req, res) {
+app.put('/files/:name/:content', async function (req, res) {
     var name = req.params.name
     var content = req.params.content
     let text = await myMERN_module.update(name,content);
     res.send(text)
 })
-app.delete('/files/:name', function (req, res) {
+app.delete('/files/:name', async function (req, res) {
     var name = req.params.name
     let text = await myMERN_module.delete(name);
     res.send(text)
