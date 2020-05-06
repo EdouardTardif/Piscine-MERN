@@ -5,7 +5,7 @@ db.createCollection( "users", {
        properties: {
             login: {
                 bsonType: "string",
-                unique: true,
+                pattern:"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]{5,20}$",
                 description: "must be a string and is required"
             },
             password: {
@@ -14,7 +14,6 @@ db.createCollection( "users", {
             },
             email: {
                 bsonType : "string",
-                unique: true,
                 pattern : "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
                 description: "must be a string and match the regular expression pattern"
             },
@@ -25,3 +24,32 @@ db.createCollection( "users", {
         }
     }}
 })
+
+db.users.createIndex({"login":1},{unique:true})
+db.users.createIndex({"email":1},{unique:true})
+
+
+db.createCollection( "products", {
+    validator: { $jsonSchema: {
+       bsonType: "object",
+       required: [ "titre","prix","description" ],
+       properties: {
+            titre: {
+                bsonType: "string",
+                description: "must be a string and is required"
+            },
+            prix: {
+                bsonType: "string",
+                pattern : "^[0-9]+$",
+                description: "must be a string and is required"
+            },
+            description: {
+                bsonType : "string",
+                description: "must be a string and match the regular expression pattern",
+            },
+        }
+    }}
+})
+
+db.users.createIndex({"login":1},{unique:true})
+db.users.createIndex({"email":1},{unique:true})
