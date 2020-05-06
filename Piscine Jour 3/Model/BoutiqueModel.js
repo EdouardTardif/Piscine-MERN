@@ -41,6 +41,13 @@ class BoutiqueModel {
             resolve(res);
         })
     }
+
+    async create(data,collection){
+        let res = await this.dbo.collection(collection).insertOne(data);
+        return new Promise(function(resolve,reject){
+            resolve(res);
+        })
+    }
 }
 
 module.exports = new BoutiqueModel()

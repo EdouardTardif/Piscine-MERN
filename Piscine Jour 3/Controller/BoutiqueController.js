@@ -57,6 +57,44 @@ class BoutiqueController {
             res.redirect('/login');
         }
     }
+
+
+    create(req,res){
+        this.sess = req.session;
+        if(this.sess._id ){
+            if(this.sess.admin == true){
+                
+                res.render('createproduct');
+            } else {
+                res.redirect('/boutique');
+            }
+
+        } else {
+            res.redirect('/login');
+        }
+    }
+
+    async createproduct(req,res){
+        let data = {
+            titre: req.body.titre,
+            prix: req.body.prix,
+            description: req.body.description,
+        }
+        this.sess = req.session;
+        if(this.sess._id ){
+            if(this.sess.admin == true){
+                console.log(data);
+                let resultat = await this.BoutiqueModel.create(data,'products');
+                res.redirect('/boutique');
+            } else {
+                res.redirect('/boutique');
+            }
+
+        } else {
+            res.redirect('/login');
+        }
+        
+    }
     
     
 }

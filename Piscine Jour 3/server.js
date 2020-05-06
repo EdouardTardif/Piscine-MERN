@@ -86,9 +86,29 @@ app.get('/boutique', function (req, res) {
 app.get('/boutique/:id', function (req, res) {
     BoutiqueController.show(req,res);
 })
+app.get('/admin/add', function (req, res) {
+    BoutiqueController.create(req,res);
+})
+app.post('/create/new/product',[ check('prix','prix is incorect').isInt(), ], function (req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        console.log(errors);
+        return res.status(400).json({ errors: errors.array() });
+    } else {
+        BoutiqueController.createproduct(req,res);
+    }
+})
+
+/*ROUTE DISPO POUR TEST
+/
+/login
+/profile
+/boutique
+/boutique/:id
+/admin/add
 
 
-
+*/ 
 
 
 app.listen(4242,function(){
