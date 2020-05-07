@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <ul>
+        <% for(x in products){ %>
+            <li>
+                <p><%= products[x].titre %></p>
+                <p><%= products[x].prix %></p>
+                <a href="http://localhost:4242/boutique/<%= products[x]._id %>">Info</a>
+            </li>
+        <% } %> 
+    </ul>
+
+</body>
+</html>
