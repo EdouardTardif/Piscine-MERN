@@ -70,7 +70,8 @@ class AuthController {
     async fetchall(req,res){
         let resultat = await this.AuthModel.fetchall('users');
         // console.log(resultat);
-        res.render('users',{users:resultat});
+        res.json(resultat);
+        // res.render('users',{users:resultat});
     }
 
 
