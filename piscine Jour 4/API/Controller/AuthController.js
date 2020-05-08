@@ -54,15 +54,16 @@ class AuthController {
                 this.sess.email = resultat[0].email;
                 this.sess.login = resultat[0].login;
                 this.sess.admin = resultat[0].type;
-                res.status(200);
-                res.redirect('/profile');
+                res.status(200).json({isloggedin : true,error : []});
+                // res.redirect('/profile');
             } else {
                 res.status(400);
                 res.send('None shall pass');
             }
             // res.render('inscription',{data:data});
         } else {
-            res.render('index',{error:'Les mots de passe ne sont pas les memes'});
+            res.status(200).json({isloggedin : false,error : {password:'Les mots de passe ne sont pas les memes'}});
+            // res.render('index',{error:'Les mots de passe ne sont pas les memes'});
         }
     }
 
@@ -84,8 +85,8 @@ class AuthController {
             email: req.body.email,
         }
 
-        data.password = this.crypto.createHash('sha1').update(JSON.stringify(data.password)).digest('hex')
         console.log(data);
+        data.password = this.crypto.createHash('sha1').update(JSON.stringify(data.password)).digest('hex')
         let resultat = await this.AuthModel.fetch(data,'users');
         if(resultat.length == 1){
             console.log('CONNECTING----------LOGIN----------------------->'+resultat[0]._id);
@@ -94,11 +95,13 @@ class AuthController {
             this.sess.email = resultat[0].email;
             this.sess.login = resultat[0].login;
             this.sess.admin = resultat[0].type;
-            res.status(200);
-            res.redirect('/profile');
+            res.json({isloggedin : true});
+            // res.status(200);
+            // res.redirect('/profile');
             // res.render('inscription',{data:resultat[0]});
         } else {
-            res.render('login',{error:'L\'identifiant ou le mot de passe n\'est pas bon'});
+            res.json({isloggedin : false,error : 'L\'identifiant ou le mot de passe n\'est pas bon'});
+            // res.render('login',{error:'L\'identifiant ou le mot de passe n\'est pas bon'});
         }
         
         
@@ -122,6 +125,16 @@ class AuthController {
             }
             res.redirect('/login');
         });
+    }
+
+
+
+    async test(req,res){
+        console.log(req.body);
+        res.json({isloggedin : true});
+        
+        
+        
     }
     
 }

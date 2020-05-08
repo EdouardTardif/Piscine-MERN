@@ -51,10 +51,10 @@ app.post('/register', [
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         console.log(errors);
-        return res.status(400).json({ errors: errors.array() });
+        res.json({ error: {else : errors.array()} });
     } else {
         AuthController.register(req,res);
-    }
+    } 
 })
 
 
@@ -77,7 +77,9 @@ app.get('/logout', function (req, res) {
     });
 })
 
-
+app.post('/test', function (req, res) {
+    AuthController.test(req,res);
+})
 
 
 
