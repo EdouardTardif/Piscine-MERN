@@ -25,7 +25,8 @@ class AuthController {
         this.app.use(this.bodyParser.urlencoded({     // to support URL-encoded bodies
             extended: true
         })); 
-
+        this.secret = 'mysecretsshhh';
+        this.jwt = require('jsonwebtoken');
         this.app.set('view engine','ejs')
 
         this.AuthModel = require('../Model/AuthModel.js');
@@ -90,12 +91,24 @@ class AuthController {
         let resultat = await this.AuthModel.fetch(data,'users');
         if(resultat.length == 1){
             console.log('CONNECTING----------LOGIN----------------------->'+resultat[0]._id);
-            this.sess = req.session;
-            this.sess._id = resultat[0]._id;
-            this.sess.email = resultat[0].email;
-            this.sess.login = resultat[0].login;
-            this.sess.admin = resultat[0].type;
-            res.json({isloggedin : true});
+
+
+            const payload = {email : resultat[0].email };
+            const token = this.jwt.sign(payload, this.secret, {
+                expiresIn: '30d',
+            });
+            console.log(token);
+            res.cookie('token', token, { maxAge: 1000 * 60 * 60 * 2, httpOnly: false })
+                .sendStatus(200);
+
+
+
+            // this.sess = req.session;
+            // this.sess._id = resultat[0]._id;
+            // this.sess.email = resultat[0].email;
+            // this.sess.login = resultat[0].login;
+            // this.sess.admin = resultat[0].type;
+            // res.json({isloggedin : true});
             // res.status(200);
             // res.redirect('/profile');
             // res.render('inscription',{data:resultat[0]});
@@ -108,14 +121,7 @@ class AuthController {
     }
     
     profile(req,res){
-        this.sess = req.session;
-        if(this.sess._id){
-            res.status(200);
-            res.render('inscription',{data:this.sess});
-        } else {
-            res.redirect('/login');
-        }
-        
+         
     }
 
     logout(req,res){
@@ -129,9 +135,15 @@ class AuthController {
 
 
 
-    async test(req,res){
-        console.log(req.body);
-        res.json({isloggedin : true});
+    async isconnected(req,res){
+        this.sess = req.session;
+        console.log(this.sess);
+        if(this.sess._id){
+            // res.status(200);
+            res.json({isloggedin : true,_id : this.sess._id});
+        } else {
+            res.json({isloggedin : false});
+        }
         
         
         

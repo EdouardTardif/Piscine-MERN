@@ -4,10 +4,42 @@ let app = express();
 const fs = require('fs');
 let bodyParser = require('body-parser');
 const { check, validationResult } = require('express-validator');
-const session = require('express-session');
-app.use(session({secret: 'ssshhhhh',saveUninitialized: true,resave: true}));
 
-var sess;
+
+
+
+// const session = require('express-session');
+// app.use(session({secret: 'ssshhhhh',saveUninitialized: true,resave: true}));
+// var sess;
+
+
+const secret = 'mysecretsshhh';
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+// const withAuth = require('./Controller/withAuth.js');
+
+
+
+const withAuth = function(req, res, next) {
+    console.log(req.cookies);
+    const token = req.cookies.token;
+    console.log(token);
+    if (!token) {
+      res.status(401).send('Unauthorized: No token provided');
+    } else {
+      jwt.verify(token, secret, function(err, decoded) {
+        if (err) {
+          res.status(401).send('Unauthorized: Invalid token');
+        } else {
+            req._id = decoded._id;
+          req.email = decoded.email;
+          next();
+        }
+      });
+    }
+}
+
 
 // const redis = require('redis');
 // const redisStore = require('connect-redis')(session);
@@ -18,6 +50,30 @@ var sess;
 //     saveUninitialized: false,
 //     resave: false
 // }));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
@@ -61,7 +117,7 @@ app.post('/register', [
 app.get('/login', function (req, res) {
     AuthController.login(req,res);
 })
-app.get('/profile', function (req, res) {
+app.get('/profile',withAuth, function (req, res) {
     AuthController.profile(req,res);
 })
 app.post('/login/test', function (req, res) {
@@ -77,12 +133,13 @@ app.get('/logout', function (req, res) {
     });
 })
 
-app.post('/test', function (req, res) {
-    AuthController.test(req,res);
+app.get('/isconnected', function (req, res) {
+    AuthController.isconnected(req,res);
 })
 
-
-
+app.get('/checkToken', withAuth , function(req, res) {
+    res.sendStatus(200);
+});
 
 let BoutiqueController = require('./Controller/BoutiqueController.js');
 

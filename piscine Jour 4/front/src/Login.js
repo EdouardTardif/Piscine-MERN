@@ -9,7 +9,7 @@ import { BrowserRouter as Router, Switch, Route, Redirect,} from 'react-router-d
 
 class Login extends React.Component {
 
-    constructor(){
+    constructor(props){
         super();
     
         this.state = {
@@ -36,13 +36,20 @@ class Login extends React.Component {
                 password : this.state.password,
             }
             const response = await axios.post( 'http://localhost:4242/login/test', form, { headers: { 'Content-Type': 'application/json' } } )
-            if(response.data.isloggedin){
-                this.setState({isloggedin : response.data.isloggedin});
+            if(response.status == 200){
+                console.log('oui');
+                // this.props.history.push('/profile');
             } else {
-                this.setState({error : response.data.error});
+                const error = new Error(response.error);
+                throw error;
             }
+            // if(response.data.isloggedin){
+            //     this.setState({isloggedin : response.data.isloggedin});
+            // } else {
+            //     this.setState({error : response.data.error});
+            // }
            
-            // console.log(response.data);
+            console.log(response);
         }
     }
 

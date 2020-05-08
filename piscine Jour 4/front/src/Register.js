@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Switch, Route, Redirect,} from 'react-router-d
 
 
 
-class Login extends React.Component {
+class Register extends React.Component {
 
     constructor(){
         super();
@@ -19,6 +19,7 @@ class Login extends React.Component {
             error : {},
             isloggedin : false,
         }
+        this.isconnected();
     }
     
 
@@ -28,6 +29,19 @@ class Login extends React.Component {
         });
      //    console.log(this.state);
     };
+
+
+    isconnected = async () => {
+            const response = await axios.get('http://localhost:4242/isconnected');
+            if(response.data.isloggedin){
+                this.setState({isloggedin : response.data.isloggedin, _id :  response.data._id});
+            } else {
+                this.setState({isloggedin : response.data.isloggedin});
+            }
+           
+            console.log(response.data);
+    }
+
 
     register = async () => {
         if(this.state.email != null && this.state.password != null && this.state.login != null){
@@ -48,7 +62,7 @@ class Login extends React.Component {
         }
     }
 
-    render(){
+    render() {
         if(this.state.isloggedin){
             return <Redirect to="/profile" />;
         }
@@ -85,4 +99,4 @@ class Login extends React.Component {
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-export default Login;
+export default Register;

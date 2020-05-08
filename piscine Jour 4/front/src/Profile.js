@@ -9,16 +9,38 @@ import axios from 'axios';
 class Profile extends React.Component {
 
 
-    state = {
-        users : []
+    constructor(){
+        super();
+    
+        this.state = {
+            login : null,
+            email : null,
+            password : null,
+            error : {},
+            isloggedin : false,
+        }
+        this.isconnected();
     }
 
-
+    isconnected = async () => {
+        const response = await axios.get('http://localhost:4242/checkToken');
+        if(response.status == 200){
+            this.setState({isloggedin : true});
+        }
+        // if(response.data.isloggedin){
+        //     this.setState({isloggedin : response.data.isloggedin, _id :  response.data._id});
+        // } else {
+        //     this.setState({isloggedin : response.data.isloggedin});
+        // }
+       
+        console.log(response);
+    }
 
     render(){
         return (
         <div>
             <h1>Profile class</h1>
+            {this.state.isloggedin ? <h2>je suis connecte</h2> : <h2>je suis pas connecte</h2>}
         </div>
         )
     }
