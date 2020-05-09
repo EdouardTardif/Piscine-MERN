@@ -22,8 +22,9 @@ app.use(cookieParser());
 
 
 const withAuth = function(req, res, next) {
-    console.log(req.cookies);
-    const token = req.cookies.token;
+    let token = req.headers["x-access-token"];
+    console.log(req.cookies.token);
+    // const token = req.cookies.token;
     console.log(token);
     if (!token) {
       res.status(401).send('Unauthorized: No token provided');
@@ -76,8 +77,12 @@ const withAuth = function(req, res, next) {
 
 
 app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    // res.header("Content-Type: application/json")
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+    // res.header(
+    //     "Access-Control-Allow-Headers","x-access-token, Origin, Content-Type , Accept");
+    // res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Headers", "Origin, x-access-token, X-Requested-With, Content-Type, Accept");
     next();
 });
 app.set('view engine','ejs')

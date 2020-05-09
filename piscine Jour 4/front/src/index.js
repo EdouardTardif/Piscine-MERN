@@ -8,6 +8,8 @@ import Nav from './Nav.js';
 import Home from './Home.js';
 import Login from './Login';
 import Register from './Register';
+import jwt_decode from 'jwt-decode';
+import Logout from './Logout';
 
 
 
@@ -21,23 +23,68 @@ class App extends React.Component {
     super();
 
     this.state = {
-        // isloggedin : Profile.state.isloggedin,
+      isloggedin : false,
+      id : null,
+      email : null,
+      login : null,
+      admin : false,
+      logininfo : {}
     }
   }
 
 
 
+checklogin = () => {
+  if(localStorage.token){
+    console.log('oui');
+    const token = localStorage.token;
+    const decoded = jwt_decode(token);
+    if(decoded){
+      console.log(decoded);
+      this.setState({ 
+        isloggedin : true,
+        id : decoded.id,
+        email : decoded.email,
+        login : decoded.login,
+        admin : decoded.admin,
+        logininfo : {
+          isloggedin : true,
+          id : decoded.id,
+          email : decoded.email,
+          login : decoded.login,
+          admin : decoded.admin,
+        }
+      })
+      return true
+    } else {
+      return false;
+    }
+  } else {
+    console.log('non');
+    return false
+  }
+}
+
+
+componentDidMount() {
+  this.checklogin();
+  
+}
+
   render(){
     return (
       <Router>
-        <div className="App">
-            <Nav />
+        <div className="App" >
+            <Nav isloggedin={this.state.isloggedin} />
             <Switch>
                 <Route path="/" exact component={Home}  />
-                <Route path="/profile" exact component={Profile}  />
+                <Route path="/profile" exact >
+                  {this.state.isloggedin ? <Profile logininfo={this.state.logininfo} /> : <Login />}
+                </Route> />
                 <Route path="/test" exact component={Test}  />
                 <Route path="/login" exact component={Login}  />
                 <Route path="/register" exact component={ Register }  />
+                <Route path="/logout" exact component={Logout}  />
             </Switch>
         </div>
       </Router>

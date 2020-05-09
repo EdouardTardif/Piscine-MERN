@@ -31,17 +31,6 @@ class Register extends React.Component {
     };
 
 
-    isconnected = async () => {
-            const response = await axios.get('http://localhost:4242/isconnected');
-            if(response.data.isloggedin){
-                this.setState({isloggedin : response.data.isloggedin, _id :  response.data._id});
-            } else {
-                this.setState({isloggedin : response.data.isloggedin});
-            }
-           
-            console.log(response.data);
-    }
-
 
     register = async () => {
         if(this.state.email != null && this.state.password != null && this.state.login != null){
@@ -52,8 +41,10 @@ class Register extends React.Component {
                 password2 : this.state.password2,
             }
             const response = await axios.post( 'http://localhost:4242/register', form, { headers: { 'Content-Type': 'application/json' } } )
-            if(response.data.isloggedin){
-                this.setState({isloggedin : response.data.isloggedin});
+            if(response.status == 200){
+                const data = response.data;
+                localStorage.setItem('token', data.token);
+                this.setState({isloggedin : true});
             } else {
                 this.setState({error : response.data.error});
             }
@@ -68,6 +59,7 @@ class Register extends React.Component {
         }
         return (
         <div>
+            <h1>REGISTER CONTROLLER</h1>
                 <ul>
                     <li>
                         <label htmlFor="login">login</label><br></br>
@@ -80,15 +72,14 @@ class Register extends React.Component {
                     
                     <li>
                         <label htmlFor="password">password</label><br></br>
-                        <input onChange={this.handleInputChange} type="text" name="password" id="password"></input>
+                        <input onChange={this.handleInputChange} type="password" name="password" id="password"></input>
                         {/* <h3>{this.state.error}</h3> */}
                     </li>
                     <li>
                         <label htmlFor="password2">Repeat password</label><br></br>
-                        <input onChange={this.handleInputChange} type="text" name="password2" id="password2"></input>
+                        <input onChange={this.handleInputChange} type="password" name="password2" id="password2" ></input>
                         {/* <h3>{this.state.error}</h3> */}
                     </li>
-                    {/* {this.state.error.map(e => <li>{e}</li> )} */}
                 </ul>
 
                 <button onClick={this.register} value="S'inscrire">S'Inscrire</button>

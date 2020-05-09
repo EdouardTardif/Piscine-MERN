@@ -26,8 +26,26 @@ class Login extends React.Component {
         this.setState({
           [e.target.name]: e.target.value,
         });
-     //    console.log(this.state);
+        console.log(this.state);
     };
+
+
+    
+
+
+
+
+
+
+
+
+    logoutHandler = () => {
+        this.setState({ isAuth: false, token: null });
+        localStorage.removeItem('token');
+        localStorage.removeItem('expiryDate');
+        localStorage.removeItem('userId');
+    };
+
 
     login = async () => {
         if(this.state.email != null && this.state.password != null){
@@ -37,28 +55,30 @@ class Login extends React.Component {
             }
             const response = await axios.post( 'http://localhost:4242/login/test', form, { headers: { 'Content-Type': 'application/json' } } )
             if(response.status == 200){
-                console.log('oui');
-                // this.props.history.push('/profile');
+                const data = response.data;
+                // console.log('oui');
+                localStorage.setItem('token', data.token);
+                // localStorage.setItem('userId', data.userId);
+                // const remainingMilliseconds = 60 * 60 * 1000;
+                // const expiryDate = new Date(
+                //     new Date().getTime() + remainingMilliseconds
+                // );
+                // localStorage.setItem('expiryDate', expiryDate.toISOString());
+                this.setState({isloggedin : true});
             } else {
                 const error = new Error(response.error);
                 throw error;
             }
-            // if(response.data.isloggedin){
-            //     this.setState({isloggedin : response.data.isloggedin});
-            // } else {
-            //     this.setState({error : response.data.error});
-            // }
-           
-            console.log(response);
         }
     }
 
     render(){
         if(this.state.isloggedin){
-            return <Redirect to="/profile" />;
+            this.props.history.push('/profile');
         }
         return (
         <div>
+            <h1>LOGIN CONTROLLER</h1>
                 <ul>
                     <li>
                         <label htmlFor="email">email</label><br></br>

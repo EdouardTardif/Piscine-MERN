@@ -3,26 +3,37 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import axios from 'axios';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 
 
 class Nav extends React.Component {
 
+    constructor(){
+        super();
+        this.state = {
+            login : null,
+            email : null,
+            password : null,
+            error : {},
+            isloggedin : false,
+        }
+    }
 
+    style = {
+        color: 'white'
+    }
     render(){
         return (
         <nav>
             <h1>Profile class</h1>
             <ul className="nav-links">
-                <Link to="/profile">
+                <Link style={this.style} to="/profile">
                     <li>Profile</li>
                 </Link>
-                <Link to="/login">
-                    <li>Login</li>
-                </Link>
-                <Link to="/register">
-                    <li>Register</li>
-                </Link>
+                
+                {this.props.isloggedin ? null :  <Link style={this.style} to="/login">Login</Link>}
+                {this.props.isloggedin ? <Link style={this.style} to="/logout">Logout</Link> : <Link style={this.style} to="/register">Register</Link>}
+                {this.props.isloggedin ? <li>je suis connecte</li> : <li>je pas suis connecte</li>}
             </ul>
         </nav>
         )

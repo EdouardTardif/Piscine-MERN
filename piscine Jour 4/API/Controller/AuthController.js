@@ -77,6 +77,34 @@ class AuthController {
     }
 
 
+    async updateuser(req,res){
+            let id = req.body.id;
+            let data = {
+                login: req.body.login,
+                email: req.body.email,
+            }
+            let resultat = await this.AuthModel.update(id,data,'users');
+            if(typeof resultat !== 'undefined'){
+                console.log('CONNECTING----------NEW UPDATE----------------------->'+resultat.insertedId);
+                resultat = await this.AuthModel.fetch({_id:id},'users');
+                this.sess = req.session;
+                this.sess._id = resultat[0]._id;
+                this.sess.email = resultat[0].email;
+                this.sess.login = resultat[0].login;
+                this.sess.admin = resultat[0].type;
+                res.status(200).json({isloggedin : true,error : []});
+                // res.redirect('/profile');
+            } else {
+                res.status(400);
+                res.send('None shall pass');
+            }
+            // res.render('inscription',{data:data});
+        } else {
+            res.status(200).json({isloggedin : false,error : {password:'Les mots de passe ne sont pas les memes'}});
+            // res.render('index',{error:'Les mots de passe ne sont pas les memes'});
+        }
+    }
+
     login(req,res){
         res.render('login');
     }
@@ -93,13 +121,14 @@ class AuthController {
             console.log('CONNECTING----------LOGIN----------------------->'+resultat[0]._id);
 
 
-            const payload = {email : resultat[0].email };
+            const payload = {email : resultat[0].email, id: resultat[0]._id.toString() , login : resultat[0].login , admin : resultat[0].type};
             const token = this.jwt.sign(payload, this.secret, {
-                expiresIn: '30d',
+                expiresIn: '1h',
             });
-            console.log(token);
-            res.cookie('token', token, { maxAge: 1000 * 60 * 60 * 2, httpOnly: false })
-                .sendStatus(200);
+            // console.log(token);
+            // res.cookie('token', token, { maxAge: 1000 * 60 * 60 * 2, httpOnly: false })
+            // console.log(req.cookies);
+            res.status(200).json({token : token, userId : resultat[0]._id.toString()});
 
 
 

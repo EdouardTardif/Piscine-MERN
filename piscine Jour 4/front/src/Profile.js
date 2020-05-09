@@ -19,28 +19,54 @@ class Profile extends React.Component {
             error : {},
             isloggedin : false,
         }
-        this.isconnected();
     }
+    
 
-    isconnected = async () => {
-        const response = await axios.get('http://localhost:4242/checkToken');
-        if(response.status == 200){
-            this.setState({isloggedin : true});
+    handleInputChange = e => {
+        this.setState({
+          [e.target.name]: e.target.value,
+        });
+     //    console.log(this.state);
+    };
+
+
+
+    register = async () => {
+        if(this.state.email != null && this.state.password != null && this.state.login != null){
+            const form = {
+                login : this.state.login,
+                email : this.state.email,
+            }
+            const response = await axios.post( 'http://localhost:4242/user/update', form, { headers: { 'Content-Type': 'application/json' } } )
+            if(response.data.isloggedin){
+                const data = response.data;
+                localStorage.setItem('token', data.token);
+                this.setState({isloggedin : true});
+            } else {
+                this.setState({error : response.data.error});
+            }
+           
+            console.log(response.data);
         }
-        // if(response.data.isloggedin){
-        //     this.setState({isloggedin : response.data.isloggedin, _id :  response.data._id});
-        // } else {
-        //     this.setState({isloggedin : response.data.isloggedin});
-        // }
-       
-        console.log(response);
     }
 
     render(){
         return (
-        <div>
-            <h1>Profile class</h1>
-            {this.state.isloggedin ? <h2>je suis connecte</h2> : <h2>je suis pas connecte</h2>}
+            <div>
+                <h1>PROFILE CONTROLLER</h1>
+            <ul>
+                <li>
+                    <label htmlFor="login">login</label><br></br>
+                    <input onChange={this.handleInputChange} type="text" name="login" id="login" defaultValue={this.props.logininfo.login}></input>
+                </li>
+                <li>
+                    <label htmlFor="email">email</label><br></br>
+                    <input onChange={this.handleInputChange} type="email" name="email" id="email" defaultValue={this.props.logininfo.email}></input>
+                </li>
+                {/* {this.state.error.map(e => <li>{e}</li> )} */}
+            </ul>
+
+            <button onClick={this.register} value="S'inscrire">Update</button>
         </div>
         )
     }
