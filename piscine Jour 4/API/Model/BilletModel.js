@@ -42,7 +42,6 @@ class BilletModel {
     }
     
     async update(id,data,collection){
-        // console.log('AuthModel : ' ,this.db ,{id,data,collection})
         let res = await this.dbo.collection(collection).updateOne({_id : id},{ $set : data });
         return new Promise(function(resolve,reject){
             resolve(res);
@@ -55,6 +54,15 @@ class BilletModel {
             resolve(res);
         })
     }
+
+
+    async fetchwherenot(id,collection){
+        let res = await this.dbo.collection(collection).find({ creator: { $ne: id }}).toArray();
+        return new Promise(function(resolve,reject){
+            resolve(res);
+        })
+    }
+
 
     async fetch(data,collection){
 

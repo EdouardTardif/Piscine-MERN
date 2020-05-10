@@ -14,6 +14,7 @@ import Billet from './Billet';
 import Myblog from './Myblog';
 
 import Billetinfo from './Billetinfo';
+import Allblogs from './Allblogs';
 
 
 
@@ -91,7 +92,11 @@ componentDidMount() {
                 <Route path="/profile" exact >
                   {this.state.isloggedin ? <Profile logininfo={this.state.logininfo} /> : <Login />}
                 </Route> />
-                <Route path="/myblog/:id" component={this.state.isloggedin ? Billetinfo : Login} />
+                <Route path="/myblog/:id" component={this.state.isloggedin ? Billetinfo : Login} logininfo={this.state.logininfo} />
+                <Route path="/blogs" exact>
+                  {this.state.isloggedin ? <Allblogs  logininfo={this.state.logininfo} /> : <Login />} 
+                </Route>
+
                 <Route path="/test" exact component={Test}  />
                 <Route path="/login" exact component={Login}  />
                 <Route path="/register" exact component={ Register }  />

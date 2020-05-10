@@ -24,9 +24,6 @@ class Billetinfo extends React.Component {
     
     componentDidMount(){
         this.fetchblog();
-        if(this.state.billets !== null){
-            this.setState({titre : this.state.billets.titre, content : this.state.billets.titre});
-        }
         // console.log(this.props.match.params.id)
     }
 
@@ -39,6 +36,8 @@ class Billetinfo extends React.Component {
             if(response.status == 200){
                 const data = response.data;
                 this.setState({billets : data.billetinfo});
+                this.setState({titre : this.state.billets.titre, content : this.state.billets.titre});
+
             } else {
                 const error = new Error(response.error);
                 throw error;
@@ -68,24 +67,23 @@ class Billetinfo extends React.Component {
     };
 
     changeinfo = async () => {
-        if(this.state.email != null && this.state.login != null){
             const form = {
-                id : this.state.billets.id,
-                login : this.state.login,
-                email : this.state.email,
+                id : this.state.billets._id,
+                titre : this.state.titre,
+                content : this.state.content,
             }
-            const response = await axios.post( 'http://localhost:4242/user/update', form, { headers: { 'Content-Type': 'application/json' } } )
+            const response = await axios.post( 'http://localhost:4242/billet/update', form, { headers: { 'Content-Type': 'application/json' } } )
             if(response.status == 200){
                 const data = response.data;
-                localStorage.removeItem('token');
-                localStorage.setItem('token', data.token);
-                this.setState({isloggedin : true});
+                window.location.reload(false);
+
+
             } else {
-                this.setState({error : response.data.error});
+                const error = new Error(response.error);
+                throw error;
             }
            
             console.log(response.data);
-        }
     }
 
     render(){
@@ -96,8 +94,8 @@ class Billetinfo extends React.Component {
         <div>
             <h1>Billetinfo CONTROLLER</h1>
 
-            { this.state.billets != null ?  <input name="titre" defaultValue={this.state.billets.titre}></input> : <h1> Vous n'avez aucun billet</h1>}<br></br>
-            { this.state.billets != null ?  <textarea name="content" defaultValue={this.state.billets.content}></textarea> : null}<br></br>
+            { this.state.billets != null ?  <input onChange={this.handleInputChange} name="titre" defaultValue={this.state.billets.titre}></input> : <h1> Vous n'avez aucun billet</h1>}<br></br>
+            { this.state.billets != null ?  <textarea onChange={this.handleInputChange} name="content" defaultValue={this.state.billets.content}></textarea> : null}<br></br>
             { this.state.billets != null ? <button onClick={this.changeinfo}>CHANGER LE BILLET</button> : null} 
             { this.state.billets != null ? <button onClick={this.deletebillet}>SUPPRIMER LE BILLET</button> : null }
         </div>

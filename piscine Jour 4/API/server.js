@@ -210,10 +210,15 @@ app.post('/billet/info', function (req, res) {
 app.post('/billet/delete', function (req, res) {
     BilletController.delete(req,res);
 })
+app.post('/billet/update', function (req, res) {
+    console.log('recu');
+    BilletController.update(req,res);
+})
 
 
-
-
+app.post('/allblogs', function (req, res) {
+    BilletController.fetchallblog(req,res);
+})
 
 app.listen(4242,function(){
     console.log('Lance');

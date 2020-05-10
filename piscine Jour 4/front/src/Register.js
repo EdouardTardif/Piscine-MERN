@@ -19,7 +19,6 @@ class Register extends React.Component {
             error : {},
             isloggedin : false,
         }
-        this.isconnected();
     }
     
 
