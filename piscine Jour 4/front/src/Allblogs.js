@@ -17,6 +17,7 @@ class Allblogs extends React.Component {
             error : [],
             isloggedin : false,
             billets : null,
+            resultat : [],
         }
         
     }
@@ -43,6 +44,7 @@ class Allblogs extends React.Component {
                 //     let cur2 = this.state.billets.allblogs.resul
                 //     console.log(cur[x], cur2[x][0]);
                 // }
+                this.test();
             } else {
                 const error = new Error(response.error);
                 throw error;
@@ -50,12 +52,14 @@ class Allblogs extends React.Component {
     }
 
     test = () => {
+        let array = [];
         for(let x in this.state.billets.allblogs.resultat){
             let cur = this.state.billets.allblogs.resultat;
             let cur2 = this.state.billets.allblogs.resul
-            console.log(cur[x], cur2[x][0]);
+            array.push({ billet : cur[x] , creator : cur2[x][0]});
         }
-        return <li>test</li>
+        this.setState({resultat : array});
+        console.log(this.state.resultat);
     }
 
     render(){
@@ -66,8 +70,11 @@ class Allblogs extends React.Component {
         <div>
             <h1>Myblog CONTROLLER</h1>
                 <ul>
-                        { this.state.billets != null && this.state.billets.allblogs.resultat.length > 0 ? this.test
-                        : <li key='test'> Vous n'avez aucun billet</li>}
+                        { this.state.billets != null && this.state.resultat.length > 0 ? this.state.resultat.map( e => 
+                            <Link to={"/"+ e.creator.login +"/" + e.billet._id} >
+                                <li> { e.billet.titre }</li>
+                            </Link>
+                        ) : <li key='test'> Vous n'avez aucun billet</li>}
                 </ul>
         </div>
         )
