@@ -20,6 +20,7 @@ class AuthController {
         this.session = require('express-session');
         this.sess;
 
+        this.ObjectId = require('mongodb').ObjectId; 
 
         this.app.use( this.bodyParser.json() );
         this.app.use(this.bodyParser.urlencoded({     // to support URL-encoded bodies
@@ -50,13 +51,14 @@ class AuthController {
             if(typeof resultat !== 'undefined'){
                 console.log('CONNECTING----------NEW REGISTRATION----------------------->'+resultat.insertedId);
                 resultat = await this.AuthModel.fetch({_id:resultat.insertedId},'users');
-                this.sess = req.session;
-                this.sess._id = resultat[0]._id;
-                this.sess.email = resultat[0].email;
-                this.sess.login = resultat[0].login;
-                this.sess.admin = resultat[0].type;
-                res.status(200).json({isloggedin : true,error : []});
-                // res.redirect('/profile');
+
+                const payload = {email : resultat[0].email, id: resultat[0]._id.toString() , login : resultat[0].login , admin : resultat[0].type};
+                const token = this.jwt.sign(payload, this.secret, {
+                    expiresIn: '1h',
+                });
+                res.status(200).json({token : token, userId : resultat[0]._id.toString()});
+
+
             } else {
                 res.status(400);
                 res.send('None shall pass');
@@ -83,27 +85,37 @@ class AuthController {
                 login: req.body.login,
                 email: req.body.email,
             }
-            let resultat = await this.AuthModel.update(id,data,'users');
+            console.log({id,data})
+            let resultat = await this.AuthModel.update(this.ObjectId(id),data,'users');
+            // console.log(resultat);
             if(typeof resultat !== 'undefined'){
-                console.log('CONNECTING----------NEW UPDATE----------------------->'+resultat.insertedId);
+                console.log('CONNECTING----------NEW UPDATE----------------------->'+id);
                 resultat = await this.AuthModel.fetch({_id:id},'users');
-                this.sess = req.session;
-                this.sess._id = resultat[0]._id;
-                this.sess.email = resultat[0].email;
-                this.sess.login = resultat[0].login;
-                this.sess.admin = resultat[0].type;
-                res.status(200).json({isloggedin : true,error : []});
-                // res.redirect('/profile');
+
+                const payload = {email : resultat[0].email, id: resultat[0]._id.toString() , login : resultat[0].login , admin : resultat[0].type};
+                const token = this.jwt.sign(payload, this.secret, {
+                    expiresIn: '1h',
+                });
+                res.status(200).json({token : token, userId : resultat[0]._id.toString()});
             } else {
                 res.status(400);
                 res.send('None shall pass');
             }
-            // res.render('inscription',{data:data});
+    }
+
+
+    async deleteuser(req,res) {
+        let id = req.body.id;
+        let resultat = await this.AuthModel.delete(this.ObjectId(id),'users');
+        if(typeof resultat !== 'undefined'){
+            res.status(200).json({deleted : true});
         } else {
-            res.status(200).json({isloggedin : false,error : {password:'Les mots de passe ne sont pas les memes'}});
-            // res.render('index',{error:'Les mots de passe ne sont pas les memes'});
+            res.status(400).json({deleted : false});
         }
     }
+
+
+
 
     login(req,res){
         res.render('login');

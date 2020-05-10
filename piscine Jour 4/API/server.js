@@ -117,7 +117,18 @@ app.post('/register', [
         AuthController.register(req,res);
     } 
 })
-
+app.post('/user/update', [
+    check('email','email is incorect').isEmail(),
+    check('login','login must have 5 to 20 characters').isLength({ min: 5, max: 20 })
+  ], function (req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        console.log(errors);
+        res.json({ error: {else : errors.array()} });
+    } else {
+        AuthController.updateuser(req,res);
+    } 
+})
 
 app.get('/login', function (req, res) {
     AuthController.login(req,res);
@@ -128,6 +139,10 @@ app.get('/profile',withAuth, function (req, res) {
 app.post('/login/test', function (req, res) {
     AuthController.logintest(req,res);
 })
+app.post('/user/delete', function (req, res) {
+    AuthController.deleteuser(req,res);
+})
+
 
 app.get('/logout', function (req, res) {
     req.session.destroy((err) => {
@@ -177,6 +192,27 @@ app.post('/create/new/product',[ check('prix','prix is incorect').isInt(), ], fu
 
 
 */ 
+
+
+
+let BilletController = require('./Controller/BilletController');
+
+app.post('/billet/create', function (req, res) {
+    BilletController.create(req,res);
+})
+app.post('/myblog', function (req, res) {
+    BilletController.fetchmyblog(req,res);
+})
+
+app.post('/billet/info', function (req, res) {
+    BilletController.fetchinfo(req,res);
+})
+app.post('/billet/delete', function (req, res) {
+    BilletController.delete(req,res);
+})
+
+
+
 
 
 app.listen(4242,function(){

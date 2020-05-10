@@ -30,7 +30,15 @@ class Nav extends React.Component {
                 <Link style={this.style} to="/profile">
                     <li>Profile</li>
                 </Link>
-                
+                <Link style={this.style} to="/blogs">
+                    <li>all blogs</li>
+                </Link>
+                <Link style={this.style} to="/myblog">
+                    <li>My blog</li>
+                </Link>
+                <Link style={this.style} to="/billet/create">
+                    <li>Create a billet</li>
+                </Link>
                 {this.props.isloggedin ? null :  <Link style={this.style} to="/login">Login</Link>}
                 {this.props.isloggedin ? <Link style={this.style} to="/logout">Logout</Link> : <Link style={this.style} to="/register">Register</Link>}
                 {this.props.isloggedin ? <li>je suis connecte</li> : <li>je pas suis connecte</li>}

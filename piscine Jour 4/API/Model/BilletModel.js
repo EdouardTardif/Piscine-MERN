@@ -1,5 +1,5 @@
 
-class AuthModel {
+class BilletModel {
 
     constructor(){
         this.express = require('express');
@@ -33,7 +33,7 @@ class AuthModel {
 
 
         
-        data.password = this.crypto.createHash('sha1').update(JSON.stringify(data.password)).digest('hex')
+        // data.password = this.crypto.createHash('sha1').update(JSON.stringify(data.password)).digest('hex')
 
         let res = await this.dbo.collection(collection).insertOne(data);
         return new Promise(function(resolve,reject){
@@ -84,4 +84,4 @@ class AuthModel {
 
 }
 
-module.exports = new AuthModel()
+module.exports = new BilletModel()

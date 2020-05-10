@@ -15,7 +15,6 @@ class Profile extends React.Component {
         this.state = {
             login : null,
             email : null,
-            password : null,
             error : {},
             isloggedin : false,
         }
@@ -29,17 +28,21 @@ class Profile extends React.Component {
      //    console.log(this.state);
     };
 
-
+    componentDidMount() {
+        this.setState({ login : this.props.logininfo.login, email : this.props.logininfo.email, id : this.props.logininfo.id})
+    }
 
     register = async () => {
-        if(this.state.email != null && this.state.password != null && this.state.login != null){
+        if(this.state.email != null && this.state.login != null){
             const form = {
+                id : this.state.id,
                 login : this.state.login,
                 email : this.state.email,
             }
             const response = await axios.post( 'http://localhost:4242/user/update', form, { headers: { 'Content-Type': 'application/json' } } )
-            if(response.data.isloggedin){
+            if(response.status == 200){
                 const data = response.data;
+                localStorage.removeItem('token');
                 localStorage.setItem('token', data.token);
                 this.setState({isloggedin : true});
             } else {
@@ -49,6 +52,25 @@ class Profile extends React.Component {
             console.log(response.data);
         }
     }
+
+
+    delete = async () => {
+            const form = {
+                id : this.state.id 
+            };
+
+            const response = await axios.post( 'http://localhost:4242/user/delete', form, { headers: { 'Content-Type': 'application/json' } } )
+            if(response.status == 200){
+                const data = response.data;
+                localStorage.removeItem('token');
+                this.props.history.push('/login');
+                // this.setState({isloggedin : false});
+            } else {
+                this.setState({error : response.data.error});
+            }
+            console.log(response.data);
+    }
+
 
     render(){
         return (
@@ -67,7 +89,10 @@ class Profile extends React.Component {
             </ul>
 
             <button onClick={this.register} value="S'inscrire">Update</button>
+
+            <button onClick={this.delete} value="DELETE PROFILE">DELETE PROFILE</button>
         </div>
+
         )
     }
 }

@@ -51,5 +51,60 @@ db.createCollection( "products", {
     }}
 })
 
+
+db.createCollection( "billets", {
+    validator: { $jsonSchema: {
+       bsonType: "object",
+       required: [ "creator","titre","content" ],
+       properties: {
+            creator: {
+                bsonType: "objectId",
+                description: "must be a string and is required"
+            }, 
+            titre: {
+                bsonType: "string",
+                description: "must be a string and is required"
+            },
+            content: {
+                bsonType : "string",
+                description: "must be a string and match the regular expression pattern",
+            },
+        }
+    }}
+})
+
+
+db.createCollection( "comments", {
+    validator: { $jsonSchema: {
+       bsonType: "object",
+       required: [ "creator","titre","description" ],
+       properties: {
+
+            belongsTo: {
+                bsonType: "objectId",
+                description: "must be a string and is required"
+            }, 
+            creator: {
+                bsonType: "objectId",
+                description: "must be a string and is required"
+            }, 
+            content: {
+                bsonType : "string",
+                description: "must be a string and match the regular expression pattern",
+            },
+            responseTo: {
+                bsonType : "string",
+                description: "must be a string and match the regular expression pattern",
+            },
+        }
+    }}
+})
+
+
+
+
+
+
+
 db.users.createIndex({"login":1},{unique:true})
 db.users.createIndex({"email":1},{unique:true})
